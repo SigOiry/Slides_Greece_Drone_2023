@@ -291,19 +291,25 @@ pal <- colorNumeric(c("#30123b", "#4662d8","#35abf8", "#1be5b5","#74fe5d","#c9ef
   na.color = "transparent")
 
 leaflet() %>%   
+  # addTiles() %>% 
+  # setView(lng =22.486526, lat = 36.401496, zoom = 17) %>%
+  addMapPane("right", zIndex = 0) %>%
   addMapPane("left", zIndex = 0) %>%
-  addMapPane("right", zIndex = 0) %>%   
-  addProviderTiles(providers$OpenStreetMap,
-                     group = "Toner",
-                     options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
-                                  pathOptions(pane = "left")),
-                     layerId = "RGBid") %>%
-  addProviderTiles(providers$OpenStreetMap,
-                     group = "Toner",
-                     options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
-                                 pathOptions(pane = "right")),
-                     layerId = "DSMid") %>% 
-  setView(lng =22.486526, lat = 36.401496, zoom = 15) %>%
+  addTiles(group = "base", layerId = "baseid", options = pathOptions(pane = "right"))  %>% 
+  addProviderTiles(providers$CartoDB, group="carto", layerId = "RGBid", options = pathOptions(pane = "left")) %>% 
+  addProviderTiles(providers$CartoDB, group="carto", layerId = "DSMid", options = pathOptions(pane = "right")) %>% 
+  # addProviderTiles(providers$OpenStreetMap,
+  #                    group = "Toner",
+  #                    options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
+  #                                pathOptions(pane = "left")),
+  #                    layerId = "RGBid"
+  #                    ) %>%
+  # addProviderTiles(providers$OpenStreetMap,
+  #                    group = "Toner",
+  #                    options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
+  #                                pathOptions(pane = "right")),
+  #                    layerId = "DSMid") %>% 
+  
   leafem::addRasterRGB(tainaron_rgb,
                        r=1,
                        g=2,
@@ -362,20 +368,24 @@ pal <- colorNumeric(c("#30123b", "#4662d8","#35abf8", "#1be5b5","#74fe5d","#c9ef
                     c(10,14.5,19.1,23.6,28.2,32.7,37.3,41.8,46.6,52),
   na.color = "transparent")
 
-leaflet() %>%
+leaflet() %>%     
+  # addTiles(options =tileOptions(zIndex=-10)) %>% 
   addMapPane("left", zIndex = 0) %>%
-  addMapPane("right", zIndex = 0) %>% 
-  setView(lng =22.486526, lat = 36.401496, zoom = 15) %>%
-  addProviderTiles(providers$OpenStreetMap,
-                     group = "Toner",
-                     options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
-                                  pathOptions(pane = "left")),
-                     layerId = "DSMid") %>%
-  addProviderTiles(providers$OpenStreetMap,
-                     group = "Toner",
-                     options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
-                                 pathOptions(pane = "right")),
-                     layerId = "DEMid") %>% 
+  addMapPane("right", zIndex = 0) %>%
+  addTiles(group = "base", layerId = "baseid", options = pathOptions(pane = "right"))  %>% 
+  addProviderTiles(providers$CartoDB, group="carto", layerId = "DSMid", options = pathOptions(pane = "left")) %>% 
+  addProviderTiles(providers$CartoDB, group="carto", layerId = "DEMid", options = pathOptions(pane = "right")) %>% 
+  # addProviderTiles(providers$MapTilesAPI,
+  #                    group = "Toner",
+  #                    options = c(providerTileOptions(minZoom = 8, maxZoom = 100,zIndex=-10),
+  #                                pathOptions(pane = "left")),
+  #                    layerId = "DSMid"
+  #                    ) %>%
+  # addProviderTiles(providers$MapTilesAPI,
+  #                    group = "Toner",
+  #                    options = c(providerTileOptions(minZoom = 8, maxZoom = 100,zIndex=-10),
+  #                                pathOptions(pane = "right")),
+  #                    layerId = "DEMid") %>%
   addRasterImage(tainaron_dsm, colors = pal,
                  maxBytes = 21486991,
                  options = pathOptions(pane = "left"),
@@ -517,20 +527,24 @@ pal <- colorNumeric(c("#30123b", "#4662d8","#35abf8", "#1be5b5","#74fe5d","#c9ef
                     c(10,14.5,19.1,23.6,28.2,32.7,37.3,41.8,46.6,51),
   na.color = "transparent")
 
-leaflet() %>%  
+leaflet() %>%
   addMapPane("left", zIndex = 0) %>%
-  addMapPane("right", zIndex = 0) %>%   
-  addProviderTiles(providers$OpenStreetMap,
-                     group = "Toner",
-                     options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
-                                  pathOptions(pane = "left")),
-                     layerId = "RGBid") %>%
-  addProviderTiles(providers$OpenStreetMap,
-                     group = "Toner",
-                     options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
-                                 pathOptions(pane = "right")),
-                     layerId = "DSMid") %>% 
-  setView(lng = 22.536944, lat = 36.655599, zoom = 15) %>%
+  addMapPane("right", zIndex = 0) %>%
+  addTiles(group = "base", layerId = "baseid", options = pathOptions(pane = "right"))  %>% 
+  addProviderTiles(providers$CartoDB, group="carto", layerId = "RGBid", options = pathOptions(pane = "left")) %>% 
+  addProviderTiles(providers$CartoDB, group="carto", layerId = "DSMid", options = pathOptions(pane = "right")) %>%  
+  # addTiles() %>% 
+  # addProviderTiles(providers$OpenStreetMap,
+  #                    group = "Toner",
+  #                    options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
+  #                                 pathOptions(pane = "left")),
+  #                    layerId = "RGBid") %>%
+  # addProviderTiles(providers$OpenStreetMap,
+  #                    group = "Toner",
+  #                    options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
+  #                                pathOptions(pane = "right")),
+  #                    layerId = "DSMid") %>% 
+  # setView(lng = 22.536944, lat = 36.655599, zoom = 15) %>%
   leafem::addRasterRGB(Skoutari_rgb,
                        r=1,
                        g=2,
