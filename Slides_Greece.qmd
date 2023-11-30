@@ -9,6 +9,7 @@ format:
         width: 2400
         height: 1350
         auto-animate: true
+output-file : index.html
 editor_options: 
   chunk_output_type: console
 ---
