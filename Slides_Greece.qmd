@@ -1,0 +1,559 @@
+---
+format: 
+    revealjs:
+        slide-number: false
+        transition: fade
+        theme: [default, style.scss]
+        footer: "Greece data processing, Simon Oiry (simon.oiry@univ-nantes.fr)"
+        logo: Images/logo2.png
+        width: 2400
+        height: 1350
+        auto-animate: true
+editor_options: 
+  chunk_output_type: console
+---
+
+##  {auto-animate="true"}
+
+::: {.gradient_box style="position: absolute; left: -500px; top: 0px; height:110px; width:  3400px; padding: 20px;text-align: center"}
+[Processing of LiDAR and RGB data]{style="font-size: 90px; font-weight: bold; line-height: 1em; margin: 0px; text-align: justify-all;"}
+:::
+
+::: {style="position: absolute; left: -500px; top: 100px; height:110px; width:  3400px; padding: 20px;text-align: center"}
+[*Tainaron and Skoutari*]{style="font-size: 90px; font-weight: bold; line-height: 1em; margin: 0px; text-align: justify-all;"}
+:::
+
+::: {style="position: absolute; left: -500px; top: 230px; height:110px; width:  3400px; padding: 20px;text-align: center"}
+[**Laurent Barillé and Simon Oiry**]{style="font-size: 70px; font-weight: bold; line-height: 1em; margin: 0px; text-align: justify-all;"}
+:::
+
+::: {.absolute top="28%" left="58.5%"}
+![](Images/20231031_152709.jpg){height="440"}
+:::
+
+::: {.absolute top="28%" left="9.6%"}
+![](Images/20231102_093556.jpg){height="900"}
+:::
+
+::: {.absolute top="62%" left="27%" data-id="box1"}
+![](Images/20231102_085717.jpg){height="440"}
+:::
+
+::: {.absolute top="28%" left="27%"}
+![](Images/20210521_101507.jpg){height="440"}
+:::
+
+::: {.absolute top="62%" left="65%"}
+![](Images/IMG-20231104-WA0010.jpg){height="440"}
+:::
+
+## Materiel and methods {auto-animate="true"}
+
+::: {.fragment .fade-out .absolute fragment-index="1" top="10%" left="60%" data-id="box1"}
+![](Images/20231102_085717_2.jpg){height="800"}
+:::
+
+::: {.fragment .fade-in-then-out .absolute fragment-index="1" top="10%" right="0%"}
+![](Images/IMG-20231104-WA0011.jpg){height="800"}
+:::
+
+::: {.fragment .fade-in-then-out .absolute fragment-index="2" top="10%" left="70%"}
+![](Images/dgps.jpg){height="1000"}
+:::
+
+::: {.fragment .fade-in-then-out .absolute fragment-index="3" top="10%" right="10%"}
+![](Images/IMG-20231104-WA0009.jpg){height="900"}
+:::
+
+::: {.fragment .fade-out fragment-index="7"}
+::: {.fragment .fade-in .absolute fragment-index="4" top="10%" right="10%"}
+![](Images/dji-zenmuse-l1_1.png){height="900"}
+:::
+:::
+
+::: {.fragment .fade-out fragment-index="1" style="position: absolute; left: 0px; top: 100px; height:110px; width:  1000px; padding: 20px; font-size: 70px"}
+-   DJI Matrice 300
+:::
+
+::: {.fragment .fade-in-then-out fragment-index="1" style="position: absolute; left: 0px; top: 100px; height:110px; width:  1000px; padding: 20px; font-size: 70px"}
+-   DJI Matrice 300
+-   RTK Positionning
+:::
+
+::: {.fragment .fade-in-then-out fragment-index="2" style="position: absolute; left: 0px; top: 100px; height:110px; width:  1000px; padding: 20px; font-size: 70px"}
+-   DJI Matrice 300
+-   RTK Positionning
+-   dGPS Trimble
+:::
+
+::: {.fragment .fade-in-then-out fragment-index="3" style="position: absolute; left: 0px; top: 100px; height:110px; width:  1000px; padding: 20px; font-size: 70px"}
+-   DJI Matrice 300
+-   RTK Positionning
+-   dGPS Trimble
+-   DJI Zenmuse L1 LiDAR
+:::
+
+::: {.fragment .fade-in-then-out fragment-index="4" style="position: absolute; left: 0px; top: 100px; height:110px; width:  1000px; padding: 20px; font-size: 70px"}
+-   DJI Matrice 300
+-   RTK Positionning
+-   dGPS Trimble
+-   DJI Zenmuse L1 LiDAR
+    -   RGB camera (20MP 1-inch CMOS sensor)
+:::
+
+::: {.fragment .fade-in-then-out fragment-index="5" style="position: absolute; left: 0px; top: 100px; height:110px; width:  1000px; padding: 20px; font-size: 70px"}
+-   DJI Matrice 300
+-   RTK Positionning
+-   dGPS Trimble
+-   DJI Zenmuse L1 LiDAR
+    -   RGB camera (20MP 1-inch CMOS sensor)
+    -   LiDAR sensor
+:::
+
+::: {.fragment .fade-in fragment-index="6" style="position: absolute; left: 0px; top: 100px; height:110px; width:  1000px; padding: 20px; font-size: 70px"}
+-   DJI Matrice 300
+-   RTK Positionning
+-   dGPS Trimble
+-   DJI Zenmuse L1 LiDAR
+    -   RGB camera (20MP 1-inch CMOS sensor)
+    -   LiDAR sensor
+        -   Infrared lasers (905nm)
+        -   240 000 points per second
+        -   up to 3 returns
+:::
+
+::: {.fragment .fade-in fragment-index="7" style="position: absolute; left: 1000px; top: 400px; height:110px; width:  1500px; padding: 20px; font-size: 100px"}
+-   5cm at 50m height in xy-Axis
+-   10cm at 50m height in z-Axis
+:::
+
+## Materiel and methods {auto-animate="true"}
+
+### Study sites and Flights settings
+
+::: {style="position: absolute; left: 0px; top: 200px; height:1000px; width:  1500px; padding: 20px; font-size: 100px"}
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+
+
+library(tidyverse)
+library(leaflet)
+library(sf)
+
+shp_tainaron <- "Data/Flight_extent_Tainaron.shp" %>% 
+  read_sf()
+
+m2 <- leaflet() %>% setView(lng =22.486526, lat = 36.401496, zoom = 10) %>% 
+  addTiles()
+m2 %>% addProviderTiles(provider = providers$Esri.WorldImagery) %>%
+  addPolygons(data = shp_tainaron) %>% 
+  addMarkers(lng = 22.486526, lat = 36.401496,
+             icon = list(iconUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Map_marker.svg/1334px-Map_marker.svg.png',iconSize = c(25, 37)
+   ))%>% 
+  addMarkers(lng = 22.487487, lat = 36.402043,
+             icon = list(iconUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Map_marker.svg/1334px-Map_marker.svg.png',iconSize = c(25, 37)
+   ))%>% 
+  addMarkers(lng = 22.485211, lat = 36.400278,
+             icon = list(iconUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Map_marker.svg/1334px-Map_marker.svg.png',iconSize = c(25, 37)
+   ))%>% 
+  addMarkers(lng = 22.483744, lat = 36.400080,
+             icon = list(iconUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Map_marker.svg/1334px-Map_marker.svg.png',iconSize = c(25, 37)
+   ))
+```
+:::
+
+::: {style="position: absolute; left: 1500px; top: 100px; height:110px; width:  1000px; padding: 20px; font-size: 100px"}
+Cape Tainaron
+:::
+
+::: {.fragment .fade-out fragment-index="7"}
+::: {.fragment .fade-in-then-out fragment-index="1" style="position: absolute; left: 1000px; top: 250px; height:110px; width:  1000px; padding: 20px; font-size: 70px"}
+-   9,7 Ha
+:::
+
+::: {.fragment .fade-in fragment-index="2" style="position: absolute; left: 1000px; top: 250px; height:110px; width:  1000px; padding: 20px; font-size: 70px"}
+-   9,7 Ha
+-   Points of Interest :
+    -   Cave of Hadès
+    -   Temple of Poseidon
+    -   Roman Bath
+    -   "Tripartite building"
+:::
+
+::: {.fragment .fade-in-then-out fragment-index="3" style="position: absolute; left: 1700px; top: 250px; height:110px; width:  800px; padding: 20px; font-size: 70px"}
+-   Flight settings
+    -   100m Flight route altitude
+:::
+
+::: {.fragment .fade-in-then-out fragment-index="4" style="position: absolute; left: 1700px; top: 250px; height:110px; width:  800px; padding: 20px; font-size: 70px"}
+-   Flight settings
+    -   100m Flight route altitude
+    -   10m/s speed
+:::
+
+::: {.fragment .fade-in-then-out fragment-index="5" style="position: absolute; left: 1700px; top: 250px; height:110px; width:  800px; padding: 20px; font-size: 70px"}
+-   Flight settings
+    -   100m Flight route altitude
+    -   10m/s speed
+    -   Course angle of 90° to the sun
+:::
+
+::: {.fragment .fade-in fragment-index="6" style="position: absolute; left: 1700px; top: 250px; height:110px; width:  800px; padding: 20px; font-size: 70px"}
+-   Flight settings
+    -   100m Flight route altitude
+    -   10m/s speed
+    -   Course angle of 90° to the sun
+    -   70% of front and side overlap
+:::
+:::
+
+::: {.fragment .fade-in fragment-index="7" style="position: absolute; left: 1300px; top: 250px; height:110px; width:  1200px; padding: 20px; font-size: 90px"}
+-   483 points per m²
+-   332 photos
+-   2.7 cm per pixel
+-   25 minutes of flights
+:::
+
+## Result
+
+### Tainaron Cape
+
+::: {.fragment .fade-out fragment-index="6" style="position: absolute; left: 700px; top: 0; height:110px; width:  2000px; padding: 20px; font-size: 100px"}
+Orthomosaic from Photogrammetry
+:::
+
+::: {.fragment .fade-out fragment-index="6"}
+::: {.absolute top="15%" left="-5%"}
+![](Images/TainaronRGB1_2.png){height="1000"}
+:::
+
+::: {.fragment .fade-in-then-out .absolute fragment-index="1" top="15%" left="5%"}
+![](Images/TainaronRGB2.png){height="900"}
+:::
+
+::: {.fragment .fade-in .absolute fragment-index="2" top="15%" left="50%"}
+![](Images/TainaronRGB2.png){height="400"}
+:::
+
+::: {.fragment .fade-in-then-out .absolute fragment-index="2" top="15%" left="5%"}
+![](Images/TainaronRGB3.png){height="900"}
+:::
+
+::: {.fragment .fade-in .absolute fragment-index="3" top="15%" right="0%"}
+![](Images/TainaronRGB3.png){height="400"}
+:::
+
+::: {.fragment .fade-in-then-out .absolute fragment-index="3" top="15%" left="5%"}
+![](Images/TainaronRGB4.png){height="900"}
+:::
+
+::: {.fragment .fade-in .absolute fragment-index="4" top="50%" left="50%"}
+![](Images/TainaronRGB4.png){height="400"}
+:::
+
+::: {.fragment .fade-in-then-out .absolute fragment-index="4" top="15%" left="5%"}
+![](Images/TainaronRGB5.png){height="900"}
+:::
+
+::: {.fragment .fade-in .absolute fragment-index="5" top="50%" right="0%"}
+![](Images/TainaronRGB5.png){height="400"}
+:::
+:::
+
+::: {.fragment .fade-in-then-out fragment-index="6" style="position: absolute; left: 1000px; top: 120px; height:110px; width:  1200px; padding: 20px; font-size: 40px"}
+RGB map and Digital Surface Model
+:::
+
+::: {.fragment .fade-in fragment-index="6" style="position: absolute; left: 0px; top: 200px; height:1300px; width:  2400px; padding: 20px; font-size: 90px"}
+```{r DSM_RGB}
+#| fig-width: 10
+#| fig-height: 11
+#| out-width: "100%"
+
+library(tidyverse)
+library(leaflet)
+library(sf)
+library(leafem)
+library(leaflet.extras2)
+library(terra)
+
+
+
+tainaron_rgb <- "Data/Raster/Tainaron_RGB_resampled_15cm.tif" %>% 
+  raster::stack()
+
+tainaron_dsm <- "Data/Raster/Tainaron_dsm_colored_15cm.tif" %>% 
+  raster::stack()
+
+pal <- colorNumeric(c("#30123b", "#4662d8","#35abf8", "#1be5b5","#74fe5d","#c9ef34","#fbb938","#f56918","#c92903","#7a0403"), 
+                    c(10,14.5,19.1,23.6,28.2,32.7,37.3,41.8,46.6,51),
+  na.color = "transparent")
+
+leaflet() %>%   
+  addMapPane("left", zIndex = 0) %>%
+  addMapPane("right", zIndex = 0) %>%   
+  addProviderTiles(providers$OpenStreetMap,
+                     group = "Toner",
+                     options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
+                                  pathOptions(pane = "left")),
+                     layerId = "RGBid") %>%
+  addProviderTiles(providers$OpenStreetMap,
+                     group = "Toner",
+                     options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
+                                 pathOptions(pane = "right")),
+                     layerId = "DSMid") %>% 
+  setView(lng =22.486526, lat = 36.401496, zoom = 15) %>%
+  leafem::addRasterRGB(tainaron_rgb,
+                       r=1,
+                       g=2,
+                       b=3,
+                       maxBytes = 499998068,
+                       options = pathOptions(pane = "left"),
+                       layerId = "RGBid"
+                       ) %>%
+  leafem::addRasterRGB(tainaron_dsm,
+                       r=1,
+                       g=2,
+                       b=3,
+                       maxBytes = 499998068,
+                       options = pathOptions(pane = "right"),
+                       layerId = "DSMid") %>%
+  addLegend(pal = pal, values = c(10:52),
+    title = "Height")%>%
+  leaflet.extras2::addSidebyside(rightId = "DSMid",
+                                  leftId = "RGBid")
+
+```
+:::
+
+::: {.fragment .fade-in fragment-index="6" style="position: absolute; left: 0; bottom: -60px; height:110px; width: 2000px; padding: 20px; font-size: 30px"}
+On this map, the resolution has been degraded for plotting purposes. The raw resolution is 2 cm/px, whereas on this map, it is 15 cm/px.
+:::
+
+
+::: {.fragment .fade-in fragment-index="7" style="position: absolute; left: 100px; top: 120px; height:110px; width:  1200px; padding: 20px; font-size: 40px"}
+Digital Surface Model (from the Photogrammetry)
+:::
+
+::: {.fragment .fade-in fragment-index="7" style="position: absolute; left: 1300px; top: 120px; height:110px; width:  1200px; padding: 20px; font-size: 40px"}
+Digital Elevation Model (from LiDAR)
+:::
+
+::: {.fragment .fade-in fragment-index="7" style="position: absolute; left: 0px; top: 200px; height:1300px; width:  2400px; padding: 20px; font-size: 90px"}
+```{r DSM_DEM_Tainaron}
+#| fig-width: 10
+#| fig-height: 11
+#| out-width: "100%"
+
+library(tidyverse)
+library(leaflet)
+library(sf)
+library(leafem)
+library(leaflet.extras2)
+
+tainaron_dsm <- "Data/Raster/Tainaron_dsm_resampled_15cm.tif" %>% 
+  raster::raster()
+
+tainaron_dem <- "Data/Raster/Tainaron_DEM_resampled_15cm.tif" %>% 
+  raster::raster()
+
+pal <- colorNumeric(c("#30123b", "#4662d8","#35abf8", "#1be5b5","#74fe5d","#c9ef34","#fbb938","#f56918","#c92903","#7a0403"), 
+                    c(10,14.5,19.1,23.6,28.2,32.7,37.3,41.8,46.6,52),
+  na.color = "transparent")
+
+leaflet() %>%
+  addMapPane("left", zIndex = 0) %>%
+  addMapPane("right", zIndex = 0) %>% 
+  setView(lng =22.486526, lat = 36.401496, zoom = 15) %>%
+  addProviderTiles(providers$OpenStreetMap,
+                     group = "Toner",
+                     options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
+                                  pathOptions(pane = "left")),
+                     layerId = "DSMid") %>%
+  addProviderTiles(providers$OpenStreetMap,
+                     group = "Toner",
+                     options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
+                                 pathOptions(pane = "right")),
+                     layerId = "DEMid") %>% 
+  addRasterImage(tainaron_dsm, colors = pal,
+                 maxBytes = 21486991,
+                 options = pathOptions(pane = "left"),
+                 layerId = "DSMid") %>%
+  addRasterImage(tainaron_dem, colors = pal,
+                 maxBytes = 21486991,
+                 options = pathOptions(pane = "right"),
+                 layerId = "DEMid") %>%
+  addLegend(pal = pal, values = c(10:52),
+    title = "Height")%>%
+  leaflet.extras2::addSidebyside(rightId = "DEMid",
+                                  leftId = "DSMid")
+
+```
+:::
+
+::: {.fragment .fade-in fragment-index="7" style="position: absolute; left: 0; bottom: -60px; height:110px; width: 2000px; padding: 20px; font-size: 30px"}
+On this map, the resolution has been degraded for plotting purposes. The raw resolution is 2 cm/px, whereas on this map, it is 15 cm/px.
+:::
+
+
+## Materiel and methods
+
+### Study sites and Flights settings
+
+::: {.absolute top="10%" left="5%"}
+![](Images/DJI_MAVIC_3_CLASSIC_01.png){height="500"}
+:::
+
+::: {.incremental style="position: absolute; left: 200px; top: 600px; height:110px; width:  1000px; padding: 20px; font-size: 70px"}
+-   DJI Mavic 3 Classic
+-   4k resolution images
+:::
+
+## Materiel and methods
+
+### Study sites and Flights settings
+
+::: {style="position: absolute; left: 1500px; top: 100px; height:110px; width:  1000px; padding: 20px; font-size: 100px"}
+Skoutari bay
+:::
+
+::: {style="position: absolute; left: 0px; top: 200px; height:1000px; width:  1500px; padding: 20px; font-size: 100px"}
+
+
+```{r map_skoutari}
+#| fig-width: 10
+#| fig-height: 10
+
+
+library(tidyverse)
+library(leaflet)
+library(sf)
+
+shp_skoutari <- "Data/Flight_extent_Skoutari.shp" %>% 
+  read_sf()
+
+m2 <- leaflet() %>% setView(lng =22.536944, lat = 36.655599, zoom = 10) %>% 
+  addTiles()
+m2 %>% addProviderTiles(provider = providers$Esri.WorldImagery) %>%
+  addPolygons(data = shp_skoutari) %>% 
+  addMarkers(lng = 22.536944, lat = 36.655599,
+             icon = list(iconUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Map_marker.svg/1334px-Map_marker.svg.png',iconSize = c(25, 37)
+   ))
+```
+:::
+
+::: {.fragment .fade-out fragment-index="7"}
+::: {.fragment .fade-in-then-out fragment-index="1" style="position: absolute; left: 1000px; top: 250px; height:110px; width:  1000px; padding: 20px; font-size: 70px"}
+-   8.7 Ha
+:::
+
+::: {.fragment .fade-in fragment-index="2" style="position: absolute; left: 1000px; top: 250px; height:110px; width:  1000px; padding: 20px; font-size: 70px"}
+-   8,7 Ha
+-   Points of Interest :
+    -   Rosso Antico Quarry
+:::
+
+::: {.fragment .fade-in-then-out fragment-index="3" style="position: absolute; left: 1700px; top: 250px; height:110px; width:  800px; padding: 20px; font-size: 70px"}
+-   Flight settings
+    -   100m Flight route altitude
+:::
+
+::: {.fragment .fade-in-then-out fragment-index="4" style="position: absolute; left: 1700px; top: 250px; height:110px; width:  800px; padding: 20px; font-size: 70px"}
+-   Flight settings
+    -   100m Flight route altitude
+    -   10m/s speed
+:::
+
+::: {.fragment .fade-in-then-out fragment-index="5" style="position: absolute; left: 1700px; top: 250px; height:110px; width:  800px; padding: 20px; font-size: 70px"}
+-   Flight settings
+    -   100m Flight route altitude
+    -   10m/s speed
+    -   Course angle of 90° to the sun
+:::
+
+::: {.fragment .fade-in fragment-index="6" style="position: absolute; left: 1700px; top: 250px; height:110px; width:  800px; padding: 20px; font-size: 70px"}
+-   Flight settings
+    -   100m Flight route altitude
+    -   10m/s speed
+    -   Course angle of 90° to the sun
+    -   70% of front and side overlap
+:::
+:::
+
+::: {.fragment .fade-in fragment-index="7" style="position: absolute; left: 1300px; top: 250px; height:110px; width:  1200px; padding: 20px; font-size: 90px"}
+-   429 points per m²
+-   320 photos
+-   2.7 cm per pixel
+-   20 minutes of flights
+:::
+
+## Result
+### Skoutari Bay
+
+::: { style="position: absolute; left: 1000px; top: 120px; height:110px; width: 1200px; padding: 20px; font-size: 40px"}
+RGB map and Digital Surface Model
+:::
+
+::: { style="position: absolute; left: 0px; top: 200px; height:1300px; width: 2400px; padding: 20px; font-size: 90px"}
+```{r DSM_Skoutari}
+#| fig-width: 10
+#| fig-height: 11
+#| out-width: "100%"
+
+library(tidyverse)
+library(leaflet)
+library(sf)
+library(leafem)
+library(leaflet.extras2)
+
+Skoutari_dsm <- "Data/Raster/Skoutari_dsm_colored_15cm.tif" %>%
+  raster::stack()
+
+Skoutari_rgb <- "Data/Raster/Skoutari_RGB_resampled_15cm.tif" %>%
+  raster::stack()
+
+pal <- colorNumeric(c("#30123b", "#4662d8","#35abf8", "#1be5b5","#74fe5d","#c9ef34","#fbb938","#f56918","#c92903","#7a0403"), 
+                    c(10,14.5,19.1,23.6,28.2,32.7,37.3,41.8,46.6,51),
+  na.color = "transparent")
+
+leaflet() %>%  
+  addMapPane("left", zIndex = 0) %>%
+  addMapPane("right", zIndex = 0) %>%   
+  addProviderTiles(providers$OpenStreetMap,
+                     group = "Toner",
+                     options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
+                                  pathOptions(pane = "left")),
+                     layerId = "RGBid") %>%
+  addProviderTiles(providers$OpenStreetMap,
+                     group = "Toner",
+                     options = c(providerTileOptions(minZoom = 8, maxZoom = 100),
+                                 pathOptions(pane = "right")),
+                     layerId = "DSMid") %>% 
+  setView(lng = 22.536944, lat = 36.655599, zoom = 15) %>%
+  leafem::addRasterRGB(Skoutari_rgb,
+                       r=1,
+                       g=2,
+                       b=3,
+                       maxBytes = 499998068,
+                       options = pathOptions(pane = "left"),
+                       layerId = "RGBid"
+                       ) %>%
+  leafem::addRasterRGB(Skoutari_dsm,
+                       r=1,
+                       g=2,
+                       b=3,
+                       maxBytes = 499998068,
+                       options = pathOptions(pane = "right"),
+                       layerId = "DSMid") %>%
+  addLegend(pal = pal, values = c(10:52),
+    title = "Height")%>%
+  leaflet.extras2::addSidebyside(rightId = "DSMid",
+                                  leftId = "RGBid")
+```
+:::
+
+::: { style="position: absolute; left: 0; bottom: -60px; height:110px; width: 2000px; padding: 20px; font-size: 30px"}
+On this map, the resolution has been degraded for plotting purposes. The raw resolution is 2 cm/px, whereas on this map, it is 15 cm/px.
+:::
+
